@@ -30,6 +30,12 @@ public class PedidoService
     public Pedido BuscarPorId(int id)
         => _pedidoRepo.ReadById(id) ?? throw new InvalidOperationException("Pedido não encontrado.");
 
+    public List<Pedido> BuscarPorClienteId(int clienteId)
+    {
+        if (_clienteRepo.ReadById(clienteId) == null)
+            throw new ArgumentException($"Cliente com Id {clienteId} não encontrado.");
+        return _pedidoRepo.ReadAll().Where(p => p.ClienteId == clienteId).ToList();
+    }
     public void Atualizar(int id, string? novoProduto, decimal? novoValor, int? novoClienteId)
     {
         var pedido = BuscarPorId(id);

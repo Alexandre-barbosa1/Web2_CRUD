@@ -21,16 +21,18 @@ public class PedidoController
             Console.WriteLine("--- PEDIDOS ---");
             Console.WriteLine("1. Criar");
             Console.WriteLine("2. Listar");
-            Console.WriteLine("3. Atualizar");
-            Console.WriteLine("4. Excluir");
+            Console.WriteLine("3. Buscar Pedido");
+            Console.WriteLine("4. Atualizar");
+            Console.WriteLine("5. Excluir");
             Console.WriteLine("0. Voltar");
             Console.Write("Escolha: ");
             switch (Console.ReadLine())
             {
                 case "1": Criar(); break;
                 case "2": Listar(); break;
-                case "3": Atualizar(); break;
-                case "4": Excluir(); break;
+                case "3": BuscarPorId(); break;
+                case "4": Atualizar(); break;
+                case "5": Excluir(); break;
                 case "0": voltar = true; break;
                 default: Console.WriteLine("Opção inválida."); break;
             }
@@ -61,7 +63,18 @@ public class PedidoController
         foreach (var p in pedidos)
             Console.WriteLine($"[{p.Id}] {p.Produto} - R$ {p.Valor:F2} - Cliente: {p.ClienteNome} (Id {p.ClienteId})");
     }
-
+    private void BuscarPorId()
+    {
+        try
+        {
+            Console.Write("Id do pedido: ");
+            if (!int.TryParse(Console.ReadLine(), out int id)) { Console.WriteLine("Id inválido."); return; }
+            var pedidos =_service.BuscarPorId(id);
+            Console.WriteLine($"[{pedidos.Id}] {pedidos.Produto} - R$ {pedidos.Valor:F2} - Cliente: {pedidos.ClienteNome} (Id {pedidos.ClienteId})");
+        }
+        catch (Exception ex) { Console.WriteLine($"Erro: {ex.Message}"); }
+    }
+  
     private void Atualizar()
     {
         try

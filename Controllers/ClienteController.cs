@@ -23,16 +23,20 @@ public class ClienteController
             Console.WriteLine("--- CLIENTES ---");
             Console.WriteLine("1. Criar");
             Console.WriteLine("2. Listar");
-            Console.WriteLine("3. Atualizar");
-            Console.WriteLine("4. Excluir");
+            Console.WriteLine("3. Buscar Cliente");
+            Console.WriteLine("4. Buscar Pedidos do Cliente");
+            Console.WriteLine("5. Atualizar");
+            Console.WriteLine("6. Excluir");
             Console.WriteLine("0. Voltar");
             Console.Write("Escolha: ");
             switch (Console.ReadLine())
             {
                 case "1": Criar(); break;
                 case "2": Listar(); break;
-                case "3": Atualizar(); break;
-                case "4": Excluir(); break;
+                case "3": BuscarPorId(); break;
+                case "4": BuscarPedidos(); break;
+                case "5": Atualizar(); break;
+                case "6": Excluir(); break;
                 case "0": voltar = true; break;
                 default: Console.WriteLine("Opção inválida."); break;
             }
@@ -59,6 +63,31 @@ public class ClienteController
         if (clientes.Count == 0) { Console.WriteLine("Nenhum cliente cadastrado."); return; }
         foreach (var c in clientes)
             Console.WriteLine($"[{c.Id}] {c.Nome} - {c.Email}");
+    }
+
+    private void BuscarPorId()
+    {
+        try
+        {
+            Console.Write("Id do cliente: ");
+            if (!int.TryParse(Console.ReadLine(), out int id)) { Console.WriteLine("Id inválido."); return; }
+            var cliente = _service.BuscarPorId(id);
+            Console.WriteLine($"[{cliente.Id}] {cliente.Nome} - {cliente.Email}");
+        }
+        catch (Exception ex) { Console.WriteLine($"Erro: {ex.Message}"); }
+    }
+    private void BuscarPedidos()
+    {
+        try
+        {
+            Console.Write("Id do cliente: ");
+            if (!int.TryParse(Console.ReadLine(), out int id)) { Console.WriteLine("Id inválido."); return; }
+            var pedidos = _pedidoService.BuscarPorClienteId(id);
+            if (pedidos.Count == 0) { Console.WriteLine("Nenhum pedido encontrado para este cliente."); return; }
+            foreach (var p in pedidos)
+                Console.WriteLine($"[{p.Id}] {p.Produto} - R$ {p.Valor:F2} - Cliente: {p.ClienteNome} (Id {p.ClienteId})");
+        }
+        catch (Exception ex) { Console.WriteLine($"Erro: {ex.Message}"); }
     }
 
     private void Atualizar()
