@@ -76,7 +76,7 @@ public class PedidoRepository
         using var conn = new NpgsqlConnection(Database.ConnectionString);
         conn.Open();
         var cmd = conn.CreateCommand();
-        cmd.CommandText = "SELECT Id, Produto, Valor, ClienteId FROM Pedido WHERE ClienteId = @clienteId ORDER BY Id";
+        cmd.CommandText = "SELECT p.Id, Produto, Valor, ClienteId, Nome FROM Pedido p JOIN Cliente c ON c.Id = ClienteId WHERE ClienteId = @clienteId ORDER BY Id";
         cmd.Parameters.AddWithValue("clienteId", clienteId);
         using var reader = cmd.ExecuteReader();
         while (reader.Read())
@@ -86,7 +86,8 @@ public class PedidoRepository
                 Id = reader.GetInt32(0),
                 Produto = reader.GetString(1),
                 Valor = reader.GetDecimal(2),
-                ClienteId = reader.GetInt32(3)
+                ClienteId = reader.GetInt32(3),
+                ClienteNome = reader.GetString(4)
             });
         }
         return lista;

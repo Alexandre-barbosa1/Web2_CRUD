@@ -34,7 +34,7 @@ public class PedidoService
     {
         if (_clienteRepo.ReadById(clienteId) == null)
             throw new ArgumentException($"Cliente com Id {clienteId} não encontrado.");
-        return _pedidoRepo.ReadAll().Where(p => p.ClienteId == clienteId).ToList();
+        return _pedidoRepo.ReadByClienteId(clienteId);
     }
     public void Atualizar(int id, string? novoProduto, decimal? novoValor, int? novoClienteId)
     {
