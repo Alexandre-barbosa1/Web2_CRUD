@@ -115,15 +115,6 @@ public class ClienteController
         {
             Console.Write("Id do cliente: ");
             if (!int.TryParse(Console.ReadLine(), out int id)) { Console.WriteLine("Id inválido."); return; }
-
-            var qtdPedidos = _pedidoService.ListarTodos().Count(p => p.ClienteId == id);
-            if (qtdPedidos > 0)
-            {
-                Console.WriteLine($"Atenção: este cliente possui {qtdPedidos} pedido(s). Ao excluir, os pedidos também serão excluídos (cascade).");
-                Console.Write("Confirmar exclusão? (s/n): ");
-                if (Console.ReadLine()?.Trim().ToLower() != "s") { Console.WriteLine("Operação cancelada."); return; }
-            }
-
             _service.Excluir(id);
             Console.WriteLine("Cliente excluído com sucesso.");
         }

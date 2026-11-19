@@ -45,6 +45,20 @@ public class ClienteService
     public void Excluir(int id)
     {
         BuscarPorId(id); // garante que existe
+        //regra de negócio antes de excluir
+        var qtdPedidos = ContarPedidos(id);
+            if (qtdPedidos > 0)
+            {
+                do{
+                    Console.WriteLine($"Atenção: este cliente possui {qtdPedidos} pedido(s). Ao excluir, os pedidos também serão excluídos (cascade).");
+                    Console.Write("Confirmar exclusão? (s/n): ");
+                    var confirmacao = Console.ReadLine()?.Trim().ToLower();
+                    if (confirmacao == "s") break;
+                    if (confirmacao == "n") { Console.WriteLine("Operação cancelada."); return; }
+                    Console.WriteLine("Opção inválida. Digite 's' para sim ou 'n' para não.");
+                } while (true);
+                
+            }
         _clienteRepo.Delete(id);
     }
 }
