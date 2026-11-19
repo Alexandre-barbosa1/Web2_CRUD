@@ -1,0 +1,13 @@
+Regras de Negocio:
+
+1. email DEVE conter '@', 
+implementado no ClienteService
+justificativa: email precisa ser valido
+
+2. exclusao de cliente com pedido PRECISA de aprovação para fazer cascade deletando seus pedidos
+implementado no ClienteService
+justificativa: Pedido sem cliente não pode existir
+
+3. exclusao de cliente com pedidos cujo valor total ultrapasse o limite SERÁ IMPEDIDO
+implementado no ClienteService
+justificativa: Não perder cliente com alto rendimento

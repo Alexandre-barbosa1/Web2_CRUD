@@ -41,12 +41,20 @@ public class ClienteService
 
     // Quantos pedidos este cliente tem — regra de negócio usada antes de excluir (cascade).
     public int ContarPedidos(int clienteId) => _pedidoRepo.ReadByClienteId(clienteId).Count;
-
+    public decimal SomarPedidos(int clienteId) => _pedidoRepo.ReadByClienteId(clienteId).Sum(p => p.Valor);
     public void Excluir(int id)
     {
         BuscarPorId(id); // garante que existe
         //regra de negócio antes de excluir
+        var valorTotalPedidos = SomarPedidos(id);
+        var lim = decimal.Parse(Environment.GetEnvironmentVariable("VALOR_NAO_EXCLUSAO") ?? "1000000");
+        if (valorTotalPedidos > lim)
+        {
+            throw new InvalidOperationException($"Não é possível excluir o cliente, pois o valor total dos pedidos ({valorTotalPedidos:C}) excede o limite permitido.");
+        }
+
         var qtdPedidos = ContarPedidos(id);
+            
             if (qtdPedidos > 0)
             {
                 do{
